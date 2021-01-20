@@ -245,6 +245,8 @@ namespace Trustme_.Migrations.Services
             {
                 if(address[1] != "Район") // область и город
                 {
+                    Console.WriteLine("address[0]" + address[0]);
+                    Console.WriteLine("address[1]" + address[address.Length-1]);
                     context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
                     int idCity = FindCityId(address[1],context);
                     context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = idCity;
