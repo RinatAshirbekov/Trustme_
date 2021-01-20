@@ -235,31 +235,39 @@ namespace Trustme_.Migrations.Services
         }
         private void AddRegionAndCityId(string[] address, trustmeContext context)
         {
-            if(address.Length < 3) // только область
+            try
             {
-                context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
-                context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = 86;
-                context.SaveChanges();
-            }
-            else // область и город/район
-            {
-                if(address[1] != "Район") // область и город
-                {
-                    Console.WriteLine("address[0]" + address[0]);
-                    Console.WriteLine("address[1]" + address[address.Length-1]);
-                    foreach (var region in context.Regions.OrderBy(r=>r.Id)) Console.WriteLine(region.Name);
-                    context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
-                    int idCity = FindCityId(address[1],context);
-                    context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = idCity;
-                    context.SaveChanges();
-                }
-                else // область и район
+                if (address.Length < 3) // только область
                 {
                     context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
                     context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = 86;
                     context.SaveChanges();
                 }
+                else // область и город/район
+                {
+                    if (address[1] != "Район") // область и город
+                    {
+                        Console.WriteLine("address[0]" + address[0]);
+                        Console.WriteLine("address[1]" + address[address.Length - 1]);
+                        foreach (var region in context.Regions.OrderBy(r => r.Id)) Console.WriteLine(region.Name);
+                        context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
+                        int idCity = FindCityId(address[1], context);
+                        context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = idCity;
+                        context.SaveChanges();
+                    }
+                    else // область и район
+                    {
+                        context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).RegionId = context.Regions.FirstOrDefault(r => r.Name == address[0]).Id;
+                        context.Companies.FirstOrDefault(c => c.Address == address[address.Length - 1]).CityId = 86;
+                        context.SaveChanges();
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
         }
         private int FindCityId(string verifiableCity, trustmeContext context)
         {
