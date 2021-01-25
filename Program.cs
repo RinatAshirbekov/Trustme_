@@ -13,7 +13,8 @@ namespace Trustme_
         static void Main(string[] args)
         {
             #region добавление компаний (api)
-            //string url = "https://data.egov.kz/api/v4/gbd_ul/v1?apiKey=11faff5386924009945bb9a1c1f60572&source={\"size\":1000,\"query\":{\"bool\":{\"must\":[{\"match\":{\"nameru\":\"" + "a" + "\"}}]}}}";
+            ////string url = "https://data.egov.kz/api/v4/gbd_ul/v1?apiKey=11faff5386924009945bb9a1c1f60572&source={\"size\":1000,\"query\":{\"bool\":{\"must\":[{\"match\":{\"nameru\":\"" + "a" + "\"}}]}}}";
+            //string url = "https://data.egov.kz/api/v4/gbd_ul/v1?apiKey=11faff5386924009945bb9a1c1f60572&source={\"size\":10000,\"from\":" + 4000 + "}";
             //HttpClient httpClient = new HttpClient();
             //var response = httpClient.GetAsync(url).Result;
             //var content = response.Content.ReadAsStringAsync().Result;
@@ -22,11 +23,23 @@ namespace Trustme_
             //{
             //    //db.Okeds.Add(new Oked { Id = 1, Name = "" });
             //    //db.SaveChanges();
-            //    var companiesList = companies.Select(x => new Company { Id = Guid.NewGuid(), Address = x.addressru, Bin = x.bin, NameRu = x.nameru, OkedId = 1, CityId = 86, RegionId = 18 }).ToList();
+            //    var companiesList = companies.Select(x => new Company 
+            //    { 
+            //        Id = Guid.NewGuid(), 
+            //        Address = x.addressru, 
+            //        Bin = x.bin, NameRu = x.nameru, 
+            //        OkedId = 1, 
+            //        CityId = 86, 
+            //        RegionId = 18 
+            //    }).ToList();
+
             //    foreach (var company in companiesList)
             //    {
-            //        db.Companies.Add(company);
-            //        db.SaveChanges();
+            //        if (!db.Companies.Any(x => x.Bin.Contains(company.Bin)))
+            //        {
+            //            db.Companies.Add(company);
+            //            db.SaveChanges();
+            //        }
             //    }
             //}
             #endregion
