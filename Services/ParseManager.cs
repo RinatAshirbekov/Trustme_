@@ -428,7 +428,7 @@ namespace Trustme_.Migrations.Services
         {
             using (trustmeContext db = new trustmeContext())
             {
-                return db.Companies.Where(c=>c.RegionId > 0).Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin }).ToList();
+                return db.Companies.Where(c=>c.RegionId == 0).Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin }).ToList();
             }
         }
     }
