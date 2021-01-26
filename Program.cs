@@ -5,6 +5,7 @@ using System.Net.Http;
 using Trustme_.Models;
 using System.Linq;
 using Trustme_.Migrations.Services;
+using Trustme_.Services;
 
 namespace Trustme_
 {
@@ -13,20 +14,32 @@ namespace Trustme_
         static void Main(string[] args)
         {
             #region добавление компаний (api)
-            //string url = "https://data.egov.kz/api/v4/gbd_ul/v1?apiKey=11faff5386924009945bb9a1c1f60572&source={\"size\":1000,\"query\":{\"bool\":{\"must\":[{\"match\":{\"nameru\":\"" + "a" + "\"}}]}}}";
-            //HttpClient httpClient = new HttpClient();
-            //var response = httpClient.GetAsync(url).Result;
-            //var content = response.Content.ReadAsStringAsync().Result;
-            //var companies = JsonSerializer.Deserialize<List<CompanyOpenDataViewModel>>(content);
-            //using (trustmeContext db = new trustmeContext())
+            //for(int i = 1; i < 21; i++)
             //{
-            //    //db.Okeds.Add(new Oked { Id = 1, Name = "" });
-            //    //db.SaveChanges();
-            //    var companiesList = companies.Select(x => new Company { Id = Guid.NewGuid(), Address = x.addressru, Bin = x.bin, NameRu = x.nameru, OkedId = 1, CityId = 86, RegionId = 18 }).ToList();
-            //    foreach (var company in companiesList)
+            //    Console.WriteLine("Цикл №" + i);
+            //    var companies = CompanyService.SearchCompanyOpenDataParse(i);
+            //    using (trustmeContext db = new trustmeContext())
             //    {
-            //        db.Companies.Add(company);
+            //        db.Okeds.Add(new Oked { Id = 1, Name = "" });
             //        db.SaveChanges();
+            //        var companiesList = companies.Select(x => new Company 
+            //        { 
+            //            Id = Guid.NewGuid(),
+            //            Address = x.addressru,
+            //            Bin = x.bin,
+            //            NameRu = x.nameru,
+            //            OkedId = 1,
+            //            CityId = 86,
+            //            RegionId = 18 
+            //        }).ToList();
+            //        foreach (var company in companiesList)
+            //        {
+            //            if (!db.Companies.Any(c => c.Bin.Contains(company.Bin)))
+            //            {
+            //                db.Companies.Add(company);
+            //                db.SaveChanges();
+            //            }
+            //        }
             //    }
             //}
             #endregion
