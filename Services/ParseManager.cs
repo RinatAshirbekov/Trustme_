@@ -260,7 +260,7 @@ namespace Trustme_.Migrations.Services
                 }
                 else // область и город/район
                 {
-                    if (city != "Район") // область и город
+                    if (region != "Район") // область и город
                     {
                         region = context.Regions.FirstOrDefault(r => r.Name == address[0]).Name;
                         if (region == null)
