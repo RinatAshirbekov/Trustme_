@@ -19,11 +19,11 @@ namespace Trustme_.Migrations.Services
         }
         private void ParseAddress(List<Company> companies, trustmeContext trustmeContext)
         {
-            string noAddressSpecified = Directory.GetCurrentDirectory() + "noAddressSpecified.txt";
-            string noRegionsFound = Directory.GetCurrentDirectory() + "noRegionsFound.txt";
-            string noCityFound = Directory.GetCurrentDirectory() + "noCityFound.txt";
-            string noAddressFound = Directory.GetCurrentDirectory() + "noAddressFound.txt";
-            string exc = Directory.GetCurrentDirectory() + "exc.txt";
+            string noAddressSpecified = Directory.GetCurrentDirectory() + "\\noAddressSpecified.txt";
+            string noRegionsFound = Directory.GetCurrentDirectory() + "\\noRegionsFound.txt";
+            string noCityFound = Directory.GetCurrentDirectory() + "\\noCityFound.txt";
+            string noAddressFound = Directory.GetCurrentDirectory() + "\\noAddressFound.txt";
+            string exc = Directory.GetCurrentDirectory() + "\\exc.txt";
             if (System.IO.File.Exists(noAddressSpecified))
                 System.IO.File.Delete(noAddressSpecified);
             if (System.IO.File.Exists(noRegionsFound))
@@ -236,9 +236,9 @@ namespace Trustme_.Migrations.Services
         }
         private void AddRegionAndCityId(Guid uuidCompany, string[] address, trustmeContext context)
         {
-            string noRegionsFound = Directory.GetCurrentDirectory() + "noRegionsFound.txt";
-            string noCityFound = Directory.GetCurrentDirectory() + "noCityFound.txt";
-            string exc = Directory.GetCurrentDirectory() + "exc.txt"; 
+            string noRegionsFound = Directory.GetCurrentDirectory() + "\\noRegionsFound.txt";
+            string noCityFound = Directory.GetCurrentDirectory() + "\\noCityFound.txt";
+            string exc = Directory.GetCurrentDirectory() + "\\exc.txt"; 
             var currentCompany = context.Companies.FirstOrDefault(c => c.Id == uuidCompany);
             string region = null;
             try
