@@ -260,7 +260,8 @@ namespace Trustme_.Migrations.Services
                 }
                 else // область и город/район
                 {
-                    if (region != "Район") // область и город
+
+                    if (address[1] != "Район") // область и город
                     {
                         region = context.Regions.FirstOrDefault(r => r.Name == address[0]).Name;
                         if (region == null)
@@ -460,7 +461,7 @@ namespace Trustme_.Migrations.Services
         {
             using (trustmeContext db = new trustmeContext())
             {
-                return db.Companies.Where(c=>c.RegionId == 0).Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin }).ToList();
+                return db.Companies.Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin }).ToList();
             }
         }
     }
