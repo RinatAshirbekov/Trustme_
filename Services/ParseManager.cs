@@ -24,44 +24,47 @@ namespace Trustme_.Migrations.Services
             string noCityFound = Directory.GetCurrentDirectory() + "\\noCityFound.txt";
             string noAddressFound = Directory.GetCurrentDirectory() + "\\noAddressFound.txt";
             string exc = Directory.GetCurrentDirectory() + "\\exc.txt";
-            if (System.IO.File.Exists(noAddressSpecified))
-                System.IO.File.Delete(noAddressSpecified);
-            if (System.IO.File.Exists(noRegionsFound))
-                System.IO.File.Delete(noRegionsFound);
-            if (System.IO.File.Exists(noCityFound))
-                System.IO.File.Delete(noCityFound);
-            if (System.IO.File.Exists(noAddressFound))
-                System.IO.File.Delete(noAddressFound);
-            if (System.IO.File.Exists(exc))
-                System.IO.File.Delete(exc);
+            //if (System.IO.File.Exists(noAddressSpecified))
+            //    System.IO.File.Delete(noAddressSpecified);
+            //if (System.IO.File.Exists(noRegionsFound))
+            //    System.IO.File.Delete(noRegionsFound);
+            //if (System.IO.File.Exists(noCityFound))
+            //    System.IO.File.Delete(noCityFound);
+            //if (System.IO.File.Exists(noAddressFound))
+            //    System.IO.File.Delete(noAddressFound);
+            //if (System.IO.File.Exists(exc))
+            //    System.IO.File.Delete(exc);
 
             for (int i = 0; i < companies.Count; i++)
             {
-                Guid uuidCompany = companies[i].Id;
-                string fullAddress = companies[i].Address;
-                string[] fullAddressArray = companies[i].Address.Split(",");
-                string[] shortAddressArray = null;
-                if (fullAddressArray.Length == 1) // нет адреса
+                if(((companies[i].RegionId == 18) && (companies[i].CityId == 86)) || companies[i].Address.ToLower().Contains("семипалатинск"))
                 {
-                    System.IO.File.AppendAllText(noAddressFound, companies[i].Id + "\n");
-                    System.IO.File.AppendAllText(noAddressFound, companies[i].Address + "\n");
-                    AddRegionAndCityIdZero(uuidCompany, trustmeContext);
-                }
-                else // есть адрес
-                {
-                    shortAddressArray = GetShortAddress(fullAddressArray,trustmeContext);
-                    shortAddressArray[shortAddressArray.Length - 1] = companies[i].Address;
-                    if (shortAddressArray[0] == "Не указан регион")
+                    Guid uuidCompany = companies[i].Id;
+                    string fullAddress = companies[i].Address;
+                    string[] fullAddressArray = companies[i].Address.Split(",");
+                    string[] shortAddressArray = null;
+                    if (fullAddressArray.Length == 1 || fullAddressArray.Length == 2) // нет адреса
                     {
+                        System.IO.File.AppendAllText(noAddressFound, companies[i].Id + "\n");
+                        System.IO.File.AppendAllText(noAddressFound, companies[i].Address + "\n");
                         AddRegionAndCityIdZero(uuidCompany, trustmeContext);
-                        System.IO.File.AppendAllText(noAddressSpecified, companies[i].Id + "\n");
-                        System.IO.File.AppendAllText(noAddressSpecified, companies[i].Address + "\n\n");
                     }
-                    else
+                    else // есть адрес
                     {
-                        AddRegionAndCityId(uuidCompany, shortAddressArray, trustmeContext);
-                        if(i % 1000 == 0)
-                            Console.WriteLine("№" + i + $", текущее время - {DateTime.Now.ToShortTimeString()}");
+                        shortAddressArray = GetShortAddress(fullAddressArray, trustmeContext);
+                        shortAddressArray[shortAddressArray.Length - 1] = companies[i].Address;
+                        if (shortAddressArray[0] == "Не указан регион")
+                        {
+                            AddRegionAndCityIdZero(uuidCompany, trustmeContext);
+                            System.IO.File.AppendAllText(noAddressSpecified, companies[i].Id + "\n");
+                            System.IO.File.AppendAllText(noAddressSpecified, companies[i].Address + "\n\n");
+                        }
+                        else
+                        {
+                            AddRegionAndCityId(uuidCompany, shortAddressArray, trustmeContext);
+                            if (i % 1000 == 0)
+                                Console.WriteLine("№" + i + $", текущее время - {DateTime.Now.ToShortTimeString()}");
+                        }
                     }
                 }
             }
@@ -101,21 +104,24 @@ namespace Trustme_.Migrations.Services
                     }
                     else // если район
                     {
-                        shortAddress[2] = CityParser(fullAddressArray[3],context);
-                        if (shortAddress[2] == "Район") // если район
+                        if(fullAddressArray.Length > 3)
                         {
-                            shortAddress[1] = "Район";
-                            shortAddress[2] = "Село";
-                        }
-                        else if (shortAddress[2] == "Шымкент") // если городом оказался Шымкент, то ему нужно присвоить RegionId
-                        {
-                            shortAddress = new string[2];
-                            shortAddress[0] = RegionParser(fullAddressArray[1],context); // меняем на слово "Город Шымкент"
-                        }
-                        else // если город
-                        {
-                            shortAddress[1] = CityParser(fullAddressArray[3],context);
-                            shortAddress[2] = "Улица";
+                            shortAddress[2] = CityParser(fullAddressArray[3], context);
+                            if (shortAddress[2] == "Район") // если район
+                            {
+                                shortAddress[1] = "Район";
+                                shortAddress[2] = "Село";
+                            }
+                            else if (shortAddress[2] == "Шымкент") // если городом оказался Шымкент, то ему нужно присвоить RegionId
+                            {
+                                shortAddress = new string[2];
+                                shortAddress[0] = RegionParser(fullAddressArray[1], context); // меняем на слово "Город Шымкент"
+                            }
+                            else // если город
+                            {
+                                shortAddress[1] = CityParser(fullAddressArray[3], context);
+                                shortAddress[2] = "Улица";
+                            }
                         }
                     }
                 }
@@ -279,8 +285,14 @@ namespace Trustme_.Migrations.Services
                         }
                         else
                         {
-                            currentCompany.CityId = cityId;
-                            context.SaveChanges();
+                            if(currentCompany == null)
+                            {
+                                Console.WriteLine("не найдена компания");
+                            }
+                            {
+                                currentCompany.CityId = cityId;
+                                context.SaveChanges();
+                            }
                         }
                     }
                     else // область и район
@@ -407,6 +419,8 @@ namespace Trustme_.Migrations.Services
                     return context.Cities.FirstOrDefault(c => c.Name == "Сарыагаш").Id;
                 else if (verifiableCity == "Сәтбаев")
                     return context.Cities.FirstOrDefault(c => c.Name == "Сатпаев").Id;
+                else if (verifiableCity == "Семипалатинск")
+                    return context.Cities.FirstOrDefault(c => c.Name == "Семей").Id;
                 else if (verifiableCity == "Сергеев")
                     return context.Cities.FirstOrDefault(c => c.Name == "Сергеевка").Id;
                 else if (verifiableCity == "Талғар")
@@ -459,7 +473,7 @@ namespace Trustme_.Migrations.Services
         {
             using (trustmeContext db = new trustmeContext())
             {
-                return db.Companies.Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin }).ToList();
+                return db.Companies.Select(x => new Company { Id = x.Id, Address = x.Address, NameRu = x.NameRu, Bin = x.Bin, CityId = x.CityId, RegionId = x.RegionId }).ToList();
             }
         }
     }
