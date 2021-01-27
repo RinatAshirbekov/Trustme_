@@ -269,7 +269,6 @@ namespace Trustme_.Migrations.Services
                     }
                     else // область и город/район
                     {
-
                         if (address[1] != "Район") // область и город
                         {
                             region = context.Regions.FirstOrDefault(r => r.Name == address[0]).Name;
@@ -319,6 +318,10 @@ namespace Trustme_.Migrations.Services
                     System.IO.File.AppendAllText(exc, ex.Message + "\n\n");
                     Console.WriteLine(ex);
                 }
+            }
+            else
+            {
+                Console.WriteLine("Не найден регион");
             }
         }
         private int FindCityId(string verifiableCity, trustmeContext context)
