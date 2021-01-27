@@ -321,7 +321,7 @@ namespace Trustme_.Migrations.Services
             }
             else
             {
-                Console.WriteLine("Не найден регион");
+                Console.WriteLine("Не найден регион " + address[0]);
             }
         }
         private int FindCityId(string verifiableCity, trustmeContext context)
